@@ -19,18 +19,28 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <main className="flex flex-col items-center px-24 py-4">
-          <nav className=''>
-            <ul className='flex justify-evenly'>
-              <li className='px-2'>
+
+          <nav className='flex-start'>
+            <ul className='flex justify-evenly text-gray-500'>
+
+              <li className='px-2 hover:text-gray-900'>
                 <Link href={"/"}>Home</Link >
               </li>
-              <li className='px-2'>
+
+              <li className='px-2 hover:text-black'>
                 <Link href={"information"}>Information</Link >
               </li>
+
             </ul>
           </nav>
+
+          {children}
+
+          <div className='bottom-4'>
+            <h1>Alireza Refaee</h1>
+          </div>
+
         </main>
-        {children}
       </body>
     </html>
   )
