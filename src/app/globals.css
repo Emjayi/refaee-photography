@@ -2,10 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* body {
     background-image: url('/back.jpg');
     background-size: cover;
     background-position: center;
     color: white;
-}
+} */
 
+body {
+    background-color: black;
+}

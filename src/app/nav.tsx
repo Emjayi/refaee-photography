@@ -1,33 +1,41 @@
 'use client'
-
-import { Tab } from '@headlessui/react'
-import Image from 'next/image'
+import { useState } from 'react'
 import Link from 'next/link'
 
-export default function Nav() {
+const Navbar = () => {
+    const [infoDisplay, setInfoDisplay] = useState('hidden')
+    const [worksDisplay, setWorksDisplay] = useState('hidden')
+    const works = () => {
+        if (infoDisplay === 'hidden') { setWorksDisplay('') } else { setInfoDisplay('hidden'); setWorksDisplay('') }
+    }
+    const info = () => {
+        if (worksDisplay === 'hidden') { setInfoDisplay('') } else { setWorksDisplay('hidden'); setInfoDisplay('') }
+    }
     return (
-        <>
-            <Tab.Group manual>
-                <div className="flex flex-col items-center px-24 py-4">
-
-                    <div className="container">
-                        <Tab.List>
-                            <Tab className={'hover:'} >
-                                Tab 1
-                            </Tab>
-                        </Tab.List>
-                    </div>
-
-                    <div className="container">
-                        <Tab.Panels>
-                            <Tab.Panel><Link href={"/"}>Hello</Link></Tab.Panel>
-                            <Tab.Panel><Link href={"/information"}>Another one</Link></Tab.Panel>
-                            {/* ... */}
-                        </Tab.Panels>
-                    </div>
-                </div>
-            </Tab.Group>
-        </>
+        <nav className=' z-10'>
+            <div className='flex justify-center'>
+                <ul className='flex gap-4 '>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer' onClick={works}>Works</li>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer' onClick={info}>Information</li>
+                </ul>
+            </div>
+            <div id="works" className={'flex justify-center ' + (worksDisplay)}>
+                <ul className='flex gap-4 '>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Works</li>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Information</li>
+                </ul>
+            </div>
+            <div id="info" className={'flex justify-center ' + (infoDisplay)}>
+                <ul className='flex gap-4 '>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Works</li>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Information</li>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Information</li>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Information</li>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Information</li>
+                </ul>
+            </div>
+        </nav>
     )
 }
 
+export default Navbar
