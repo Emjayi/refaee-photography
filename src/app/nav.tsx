@@ -12,7 +12,7 @@ const Navbar = () => {
         if (worksDisplay === 'hidden') { setInfoDisplay('') } else { setWorksDisplay('hidden'); setInfoDisplay('') }
     }
     return (
-        <nav className=' z-10'>
+        <nav className=' z-10 absolute top-2'>
             <div className='flex justify-center'>
                 <ul className='flex gap-4 '>
                     <li className='text-gray-400 hover:text-gray-100 cursor-pointer' onClick={works}>Works</li>
