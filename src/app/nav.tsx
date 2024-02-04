@@ -21,8 +21,8 @@ const Navbar = () => {
             </div>
             <div id="works" className={'flex justify-center ' + (worksDisplay)}>
                 <ul className='flex gap-4 '>
-                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Works</li>
-                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'>Information</li>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'><Link href={'/works'}>Cars</Link></li>
+                    <li className='text-gray-400 hover:text-gray-100 cursor-pointer'><Link href={'/works'}>Works</Link></li>
                 </ul>
             </div>
             <div id="info" className={'flex justify-center ' + (infoDisplay)}>
