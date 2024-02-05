@@ -24,7 +24,7 @@ export default function RootLayout({
         <div className="cursor-dot"></div>
         <div className="cursor-outline"></div>
 
-        <main className="flex flex-col items-center px-24 py-4">
+        <main className="flex flex-col items-center">
 
           <Navbar />
 
@@ -32,7 +32,7 @@ export default function RootLayout({
 
 
 
-          <footer className="absolute bottom-0">
+          <footer className="footer absolute bottom-0">
             <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
               <span className="text-sm text-gray-400 sm:text-center">© 2023 <a href="https://refaee.com/" className="hover:underline">Refaee™</a>. All Rights Reserved.
               </span>

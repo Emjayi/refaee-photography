@@ -1,39 +1,60 @@
 "use client"
+// Importing Swiper For main page slider
+import { Swiper, SwiperSlide } from 'swiper/react';
 import Image from 'next/image'
-import Link from 'next/link'
-import Nav from './nav'
-import { useEffect } from 'react'
-import Navbar from './nav'
+// import required modules
+import { Navigation, Pagination } from 'swiper/modules';
+import slide1 from "public/bg/bg (1).jpg"
+import slide2 from "public/bg/bg (2).jpg"
+import slide3 from "public/bg/bg (3).jpg"
+import slide4 from "public/bg/bg (4).jpg"
+import slide5 from "public/bg/bg (5).jpg"
+import 'swiper/css';
+import 'swiper/css/navigation';
 
-
+const images = [
+  {
+    src: slide1,
+    key: 1
+  },
+  {
+    src: slide2,
+    key: 2
+  },
+  {
+    src: slide3,
+    key: 3
+  },
+  {
+    src: slide4,
+    key: 4
+  },
+  {
+    src: slide5,
+    key: 5
+  },
+]
 export default function Home() {
 
-  useEffect(() => {
-    let pos = document.documentElement;
-    pos.addEventListener('mousemove', e => {
-      pos.style.setProperty('--x', e.clientX + 'px')
-      pos.style.setProperty('--y', e.clientY + 'px')
-    })
-    document.addEventListener("mousemove", parallax);
-    function parallax(this: any, e: any) {
-      this.querySelectorAll(".layer").forEach((layer: { getAttribute: (arg0: string) => any; style: { transform: string } }) => {
-        const speed = layer.getAttribute("data-speed")
-
-        const x = (window.innerWidth - e.pageX * speed) / 100
-        const y = (window.innerHeight - e.pageY * speed) / 100
-
-        layer.style.transform = `translateX(${x}px) translateY(${y}px)`
-      })
-    };
-  })
-
   return (
-    <div className="flex max-h-[80vh] items-center justify-center">
-      <div className="parallax">
-        <Image src="/saye.png" id="shadow" data-speed="8" width={400} height={400} alt="shadow" className="layer" />
-        <Image src="/Untitled.png" id="bic" data-speed="4" width={2400} height={1800} alt="bic" className="layer" />
-      </div>
-      <div className="light"></div>
-    </div>
+    <div className='flex justify-center items-center '>
+      <Swiper
+        slidesPerView={1}
+        spaceBetween={30}
+        loop={true}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Pagination, Navigation]} className=" w-screen h-screen">
+        {
+          images.map((image) => (
+            <SwiperSlide key={image.key}>
+              <Image src={image.src} alt={`Image ${image.key}`}></Image>
+            </SwiperSlide>
+          ))
+        }
+      </Swiper>
+    </div >
   )
 }
