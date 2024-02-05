@@ -40,7 +40,7 @@ export default function Home() {
     <div className='flex justify-center items-center '>
       <Swiper
         slidesPerView={1}
-        spaceBetween={30}
+        spaceBetween={0}
         loop={true}
         pagination={{
           clickable: true,
@@ -50,7 +50,7 @@ export default function Home() {
         {
           images.map((image) => (
             <SwiperSlide key={image.key}>
-              <Image src={image.src} alt={`Image ${image.key}`}></Image>
+              <Image src={image.src} alt={`Image ${image.key}`} className=' min-h-screen object-cover'></Image>
             </SwiperSlide>
           ))
         }
