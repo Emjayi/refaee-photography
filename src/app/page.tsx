@@ -40,7 +40,7 @@ export default function Home() {
     <div className='flex justify-center items-center '>
       <Swiper
         autoplay={{
-          delay: 1500,
+          delay: 2500,
           disableOnInteraction: false,
         }}
         keyboard={{
