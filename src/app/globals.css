@@ -8,7 +8,15 @@
     background-position: center;
     color: white;
 } */
-
+.swiper-button-prev, .swiper-button-next {
+    color: rgb(209 213 219) !important; 
+}
+:root{
+    --swiper-navigation-size: 30px !important
+}
+.swiper-button-next:hover, .swiper-button-prev:hover {
+    color: rgb(235, 235, 237) !important; 
+}
 body {
     background-color: black;
 }

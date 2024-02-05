@@ -3,7 +3,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Image from 'next/image'
 // import required modules
-import { Navigation, Pagination } from 'swiper/modules';
+import { Autoplay, Keyboard, Navigation, Pagination } from 'swiper/modules';
 import slide1 from "public/bg/bg (1).jpg"
 import slide2 from "public/bg/bg (2).jpg"
 import slide3 from "public/bg/bg (3).jpg"
@@ -39,14 +39,20 @@ export default function Home() {
   return (
     <div className='flex justify-center items-center '>
       <Swiper
-        slidesPerView={1}
+        autoplay={{
+          delay: 1500,
+          disableOnInteraction: false,
+        }}
+        keyboard={{
+          enabled: true,
+        }}
         spaceBetween={0}
         loop={true}
         pagination={{
           clickable: true,
         }}
         navigation={true}
-        modules={[Pagination, Navigation]} className=" w-screen h-screen">
+        modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" w-screen h-screen">
         {
           images.map((image) => (
             <SwiperSlide key={image.key}>
