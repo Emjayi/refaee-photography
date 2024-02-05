@@ -37,7 +37,7 @@ export default async function Home() {
         {
           images.map((image, index) => (
             <SwiperSlide key={index + 1}>
-              <Image src={image.default} alt={`Image ${index + 1}`} className=' min-h-screen object-cover md:!object-fill'></Image>
+              <Image src={image.default} alt={`Image ${index + 1}`} className='max-h-screen min-h-screen object-cover md:object-cover '></Image>
             </SwiperSlide>
           ))
         }
