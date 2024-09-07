@@ -1,36 +1,47 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { navbarLinks } from '@//lib/data'
+import { usePathname } from 'next/navigation'
 
 const Navbar = () => {
+    const path = usePathname()
+    const [isHome, setHome] = useState(true)
+    useEffect(() => { if (path === "/") { setHome(true) } else { setHome(false) };[] })
+
     const [infoDisplay, setInfoDisplay] = useState('hidden')
     const [worksDisplay, setWorksDisplay] = useState('hidden')
     const works = () => {
-        if (infoDisplay === 'hidden') { setWorksDisplay('') } else { setInfoDisplay('hidden'); setWorksDisplay('') }
+        if (worksDisplay === 'hidden') {
+            if (infoDisplay === 'hidden') { setWorksDisplay('') } else { setInfoDisplay('hidden'); setWorksDisplay('') }
+        } else { setWorksDisplay('hidden') }
     }
     const info = () => {
-        if (worksDisplay === 'hidden') { setInfoDisplay('') } else { setWorksDisplay('hidden'); setInfoDisplay('') }
+        if (infoDisplay === 'hidden') {
+            if (worksDisplay === 'hidden') { setInfoDisplay('') } else { setWorksDisplay('hidden'); setInfoDisplay('') }
+        } else { setInfoDisplay('hidden') }
     }
     return (
-        <nav className=' z-10 absolute top-2'>
-            <div className='flex justify-center'>
-                <ul className='flex gap-4 bg-black/40 hover:from-black/10 hover:to-black/20 duration-1000 rounded-full px-6 py-3 bg-gradient-to-b'>
-                    <li className='text-gray-300 text-ellipsis hover:text-gray-100 cursor-pointer' onClick={works}>Works</li>
-                    <li className='text-gray-300 text-ellipsis hover:text-gray-100 cursor-pointer' onClick={info}>Information</li>
+        <nav className={isHome ? ' z-10 fixed w-screen top-0 py-4' : ' z-10 sticky top-0 py-4 bg-zinc-300'}>
+            <div className='flex justify-center  '>
+                <ul className='flex gap-4 rounded-full px-6 py-2 bg-gradient-to-b'>
+                    <li className={worksDisplay !== 'hidden' ? 'text-white duration-200 mix-blend-exclusion text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-white duration-200 mix-blend-exclusion text-ellipsis cursor-pointer'} onClick={works}>Works</li>
+                    <li className={infoDisplay !== 'hidden' ? 'text-white duration-200 mix-blend-exclusion text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-white duration-200 mix-blend-exclusion text-ellipsis cursor-pointer'} onClick={info}>Information</li>
+                    <li className={'text-zinc-400 hover:text-white duration-200 mix-blend-exclusion text-ellipsis cursor-pointer'}>Sales</li>
                 </ul>
             </div>
             <div id="works" className={'flex justify-center ' + (worksDisplay)}>
                 <ul className='flex gap-4 '>
-                    <li className='text-gray-300 text-ellipsis hover:text-gray-100 cursor-pointer'><Link href={'/cars'}>Cars</Link></li>
-                    <li className='text-gray-300 text-ellipsis hover:text-gray-100 cursor-pointer'><Link href={'/buildings'}>Buildings</Link></li>
+                    {navbarLinks.works.map((link, idx) => (
+                        <li key={idx} className={(link.link === path) ? 'text-white duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-white duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
+                    ))}
                 </ul>
             </div>
             <div id="info" className={'flex justify-center ' + (infoDisplay)}>
                 <ul className='flex gap-4 '>
-                    <li className='text-gray-300 text-ellipsis hover:text-gray-100 cursor-pointer'><Link href={'/about'}>About</Link></li>
-                    <li className='text-gray-300 text-ellipsis hover:text-gray-100 cursor-pointer'><Link href={'/contact'}>Contact</Link></li>
-                    <li className='text-gray-300 text-ellipsis hover:text-gray-100 cursor-pointer'><Link href={'/awards'}>Awards</Link></li>
-                    <li className='text-gray-300 text-ellipsis hover:text-gray-100 cursor-pointer'><Link href={'/press'}>Press</Link></li>
+                    {navbarLinks.info.map((link, idx) => (
+                        <li key={idx} className={(link.link === path) ? 'text-white duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-white duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
+                    ))}
                 </ul>
             </div>
         </nav>

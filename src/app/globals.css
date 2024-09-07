@@ -25,7 +25,7 @@ body {
     display: flex;
     flex-direction: column;
     background-color: rgb(0, 0, 0);
-    color: white;
+    color: rgb(30, 30, 30);
 }
 
 .parallax{
@@ -62,3 +62,36 @@ body {
 .footer{
     z-index: 100;
 }
+.prevent-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+  }
+  
+body {
+    --sb-track-color: #d4d4d4;
+    --sb-thumb-color: #383838;
+    --sb-size: 5px;
+  }
+  
+  body::-webkit-scrollbar {
+    width: var(--sb-size)
+  }
+  
+  body::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 3px;
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 3px;
+    
+  }
+  
+  @supports not selector(::-webkit-scrollbar) {
+    body {
+      scrollbar-color: var(--sb-thumb-color)
+                       var(--sb-track-color);
+    }
+  }

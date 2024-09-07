@@ -10,11 +10,14 @@ import 'swiper/css/navigation';
 export default async function Home() {
 
   const images = await Promise.all([
-    import("public/bg/bg (1).jpg"),
-    import("public/bg/bg (2).jpg"),
-    import("public/bg/bg (3).jpg"),
-    import("public/bg/bg (4).jpg"),
-    import("public/bg/bg (5).jpg")
+    import("public/bg/02.jpg"),
+    import("public/bg/03.jpg"),
+    import("public/bg/01.jpg"),
+    import("public/bg/04.jpg"),
+    import("public/bg/05.jpg"),
+    import("public/bg/06.jpg"),
+    import("public/bg/07.jpg"),
+    import("public/bg/08.jpg")
   ])
 
   return (
@@ -33,15 +36,23 @@ export default async function Home() {
           clickable: true,
         }}
         navigation={true}
-        modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" w-screen h-screen">
+        modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen">
         {
           images.map((image, index) => (
             <SwiperSlide key={index + 1}>
-              <Image src={image.default} alt={`Image ${index + 1}`} className='max-h-screen min-h-screen object-cover md:object-cover '></Image>
+              <Image src={image.default} alt={`Image ${index + 1}`} className='max-h-screen min-h-screen object-contain md:object-cover '></Image>
             </SwiperSlide>
           ))
         }
       </Swiper>
+      <footer className="footer fixed w-screen bottom-0">
+        <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-center">
+          <p>
+            <span className="text-sm text-gray-400 sm:text-center">© 2023 <a href="/" className="hover:underline">Refaee™</a>. All Rights Reserved.
+            </span>
+          </p>
+        </div>
+      </footer>
     </div >
   )
 }
