@@ -1,7 +1,6 @@
 export const navbarLinks = {
     main: ["Works", "Information"],
     works: [
-        { name: "All", link: "/works" },
         { name: "Commercial", link: "/works/commercial" },
         { name: "Architecture", link: "/works/architecture" },
         { name: "Packshot", link: "/works/packshot" },
@@ -11,7 +10,6 @@ export const navbarLinks = {
         { name: "Dark Mode", link: "/works/dark" },
     ],
     info: [
-        { name: "Home", link: "/" },
         { name: "About", link: "/about" },
         { name: "Backstage", link: "/backstage" },
         { name: "Portfolio", link: "/portfolio" },

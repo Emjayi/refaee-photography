@@ -1,70 +1,66 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState, useRef } from 'react'
-import { X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { X, ChevronLeft, ChevronRight, ArrowBigLeft, ArrowLeft, ArrowRight, Grid, LayoutGrid } from 'lucide-react'
 
-export default function Lightbox({ image, onClose }: any) {
-    const [isZoomed, setIsZoomed] = useState(false)
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-    const imageRef = useRef<HTMLImageElement | null>(null)
+export default function Lightbox({ images, currentIndex, onClose, onNext, onPrev }: any) {
+    const [imageIndex, setImageIndex] = useState(currentIndex)
 
-    useEffect(() => {
-        const handleEsc = (event: { keyCode: number }) => {
-            if (event.keyCode === 27) onClose()
-        }
-        window.addEventListener('keydown', handleEsc)
-        return () => window.removeEventListener('keydown', handleEsc)
-    }, [onClose])
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (imageRef.current) {
-            const { left, top, width, height } = imageRef.current.getBoundingClientRect()
-            const x = (e.clientX - left) / width
-            const y = (e.clientY - top) / height
-            setMousePosition({ x, y })
-        }
+    const handlePrev = () => {
+        const newIndex = (imageIndex - 1 + images.length) % images.length
+        setImageIndex(newIndex)
+        onPrev(newIndex)
     }
 
-    const handleImageClick = () => {
-        setIsZoomed(!isZoomed)
+    const handleNext = () => {
+        const newIndex = (imageIndex + 1) % images.length
+        setImageIndex(newIndex)
+        onNext(newIndex)
     }
 
     return (
         <div
-            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-zinc-200 flex items-center justify-center z-50"
             onClick={onClose}
-            onMouseMove={handleMouseMove}
         >
-            <button
-                className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors duration-200"
-                onClick={onClose}
-            >
-                <X size={24} />
-                <span className="sr-only">Close</span>
-            </button>
+
             <div
                 className="fixed flex max-h-full p-4"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div
-                    className={`relative w-screen ${isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}
-                    style={{ width: '100dvh', height: '80vh' }}
-                    onClick={handleImageClick}
+                    className={`relative w-screen`}
+                    style={{ width: '120dvh', height: '80vh' }}
                 >
-                    <p className="text-white text-center mt-4 z-[1000]">{image.name}</p>
                     <Image
-                        ref={imageRef}
-                        src={image.src}
-                        alt={image.alt}
+                        src={images[imageIndex].src}
+                        alt={images[imageIndex].alt}
                         fill
                         className="object-contain"
-                        style={{
-                            transform: isZoomed ? 'scale(2)' : 'scale(1)',
-                            transformOrigin: `${mousePosition.x * 100}% ${mousePosition.y * 100}%`,
-                            transition: isZoomed ? 'transform 0.3s ease-out' : 'transform 0.3s ease-out',
-                        }}
                         priority
                     />
+                    <button
+                        className="absolute left-[44%] -bottom-12 transform p-2"
+                        onClick={handlePrev}
+                    >
+                        <ArrowLeft size={24} />
+                        <span className="sr-only">Previous</span>
+                    </button>
+                    <button
+                        className="absolute right-[43%] -bottom-12 transform p-2"
+                        onClick={handleNext}
+                    >
+                        <ArrowRight size={24} />
+                        <span className="sr-only">Next</span>
+                    </button>
+                    <button
+                        className="absolute right-[47%] -bottom-12 text-zinc-800 hover:text-gray-600 p-2 transition-colors duration-200"
+                        onClick={onClose}
+                    >
+                        <LayoutGrid size={24} />
+                        <span className="sr-only">Close</span>
+                    </button>
                 </div>
             </div>
         </div>
