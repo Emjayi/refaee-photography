@@ -40,27 +40,29 @@ export default function Lightbox({ images, currentIndex, onClose, onNext, onPrev
                         className="object-contain"
                         priority
                     />
-                    <button
-                        className="absolute left-[44%] -bottom-12 transform p-2"
-                        onClick={handlePrev}
-                    >
-                        <ArrowLeft size={24} />
-                        <span className="sr-only">Previous</span>
-                    </button>
-                    <button
-                        className="absolute right-[43%] -bottom-12 transform p-2"
-                        onClick={handleNext}
-                    >
-                        <ArrowRight size={24} />
-                        <span className="sr-only">Next</span>
-                    </button>
-                    <button
-                        className="absolute right-[47%] -bottom-12 text-zinc-800 hover:text-gray-600 p-2 transition-colors duration-200"
-                        onClick={onClose}
-                    >
-                        <LayoutGrid size={24} />
-                        <span className="sr-only">Close</span>
-                    </button>
+                    <div className='w-full flex gap-2 justify-center absolute -bottom-10 '>
+                        <button
+                            onClick={handlePrev}
+                            className='text-zinc-500 hover:text-zinc-800 duration-300'
+                        >
+                            <ArrowLeft size={24} />
+                            <span className="sr-only">Previous</span>
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className='text-zinc-500 hover:text-zinc-800 duration-300'
+                        >
+                            <LayoutGrid size={24} />
+                            <span className="sr-only">Close</span>
+                        </button>
+                        <button
+                            onClick={handleNext}
+                            className='text-zinc-500 hover:text-zinc-800 duration-300'
+                        >
+                            <ArrowRight size={24} />
+                            <span className="sr-only">Next</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
