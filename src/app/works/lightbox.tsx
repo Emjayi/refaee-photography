@@ -21,7 +21,7 @@ export default function Lightbox({ images, currentIndex, onClose, onNext, onPrev
 
     return (
         <div
-            className="fixed inset-0 bg-zinc-200 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-white flex items-center justify-center z-50"
             onClick={onClose}
         >
 
@@ -43,23 +43,23 @@ export default function Lightbox({ images, currentIndex, onClose, onNext, onPrev
                     <div className='w-full flex gap-2 justify-center absolute -bottom-10 '>
                         <button
                             onClick={handlePrev}
-                            className='text-zinc-500 hover:text-zinc-800 duration-300'
+                            className='text-zinc-400 hover:text-zinc-800 duration-300'
                         >
-                            <ArrowLeft size={24} />
+                            <ArrowLeft size={16} />
                             <span className="sr-only">Previous</span>
                         </button>
                         <button
                             onClick={onClose}
-                            className='text-zinc-500 hover:text-zinc-800 duration-300'
+                            className='text-zinc-400 hover:text-zinc-800 duration-300'
                         >
-                            <LayoutGrid size={24} />
+                            <LayoutGrid size={16} />
                             <span className="sr-only">Close</span>
                         </button>
                         <button
                             onClick={handleNext}
-                            className='text-zinc-500 hover:text-zinc-800 duration-300'
+                            className='text-zinc-400 hover:text-zinc-800 duration-300'
                         >
-                            <ArrowRight size={24} />
+                            <ArrowRight size={16} />
                             <span className="sr-only">Next</span>
                         </button>
                     </div>

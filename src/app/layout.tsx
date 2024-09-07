@@ -26,7 +26,7 @@ export default function RootLayout({
           <Navbar />
         </div>
 
-        <main className=" prevent-select bg-zinc-300 min-h-screen">
+        <main className=" prevent-select bg-white min-h-screen">
           {children}
         </main>
       </body>
