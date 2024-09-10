@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Lightbox from '../lightbox'
 import { IKImage } from "imagekitio-next";
 
-const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
+const urlEndpoint = "https://ik.imagekit.io/emjayi/";
 
 export default function Gallery() {
     const [limit, setLimit] = useState(200)
