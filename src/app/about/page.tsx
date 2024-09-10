@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
 import Image from 'next/image'
-import alireza from '/public/alireza.jpg'
+import alireza from '/public/Alireza.jpg'
 
 
 const Page: NextPage = () => {
