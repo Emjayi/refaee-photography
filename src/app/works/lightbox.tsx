@@ -3,6 +3,9 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { X, ChevronLeft, ChevronRight, ArrowBigLeft, ArrowLeft, ArrowRight, Grid, LayoutGrid } from 'lucide-react'
+import { IKImage } from 'imagekitio-next'
+
+const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
 
 export default function Lightbox({ images, currentIndex, onClose, onNext, onPrev }: any) {
     const [imageIndex, setImageIndex] = useState(currentIndex)
@@ -33,13 +36,14 @@ export default function Lightbox({ images, currentIndex, onClose, onNext, onPrev
                     className={`relative w-screen`}
                     style={{ width: '120dvh', height: '80vh' }}
                 >
-                    <Image
+                    <IKImage priority urlEndpoint={urlEndpoint} lqip={{ active: true }} loading="lazy" path={images[imageIndex].src} fill alt={images[imageIndex].alt} className="object-contain" />
+                    {/* <Image
                         src={images[imageIndex].src}
                         alt={images[imageIndex].alt}
                         fill
                         className="object-contain"
                         priority
-                    />
+                    /> */}
                     <div className='w-full flex gap-2 justify-center absolute -bottom-10 '>
                         <button
                             onClick={handlePrev}

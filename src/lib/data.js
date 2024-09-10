@@ -4,10 +4,9 @@ export const navbarLinks = {
         { name: "Commercial", link: "/works/commercial" },
         { name: "Architecture", link: "/works/architecture" },
         { name: "Packshot", link: "/works/packshot" },
-        { name: "Project", link: "/works/project" },
-        { name: "Food", link: "/works/dood" },
+        { name: "Hotels", link: "/works/hotels" },
+        { name: "Food", link: "/works/food" },
         { name: "Factory", link: "/works/factory" },
-        { name: "Dark Mode", link: "/works/dark" },
     ],
     info: [
         { name: "About", link: "/about" },

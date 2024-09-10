@@ -7,13 +7,13 @@ import { IKImage } from "imagekitio-next";
 const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
 
 export default function Gallery() {
-    const [limit, setLimit] = useState(200)
+    const [limit, setLimit] = useState(100)
     const [lightboxOpen, setLightboxOpen] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(0)
 
     const images = Array.from({ length: limit }, (_, i) => ({
-        src: `Commercial/${i + 1}.jpg`,
-        alt: `Commercial Image ${i + 1}`,
+        src: `hotels/${i + 1}.jpg`,
+        alt: `hotels Image ${i + 1}`,
     }));
     const openLightbox = (index: number) => {
         setCurrentIndex(index)

@@ -12,8 +12,8 @@ export default function Gallery() {
     const [currentIndex, setCurrentIndex] = useState(0)
 
     const images = Array.from({ length: limit }, (_, i) => ({
-        src: `Commercial/${i + 1}.jpg`,
-        alt: `Commercial Image ${i + 1}`,
+        src: `packshot/${i + 1}.jpg`,
+        alt: `Packshot Image ${i + 1}`,
     }));
     const openLightbox = (index: number) => {
         setCurrentIndex(index)
