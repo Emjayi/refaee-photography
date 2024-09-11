@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import Lightbox from '../lightbox'
 import { IKImage } from "imagekitio-next";
+import { motion } from 'framer-motion';
 
 const urlEndpoint = "https://ik.imagekit.io/emjayi/";
 
@@ -33,7 +34,10 @@ export default function Gallery() {
             <main className="container mx-auto px-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
                     {images.map((image, index) => (
-                        <div
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            transition={{ duration: 0.4, delay: 0.1 }}
                             key={index}
                             className="relative overflow-hidden rounded-lg cursor-pointer group"
                             onClick={() => openLightbox(index)}
@@ -50,7 +54,7 @@ export default function Gallery() {
                             <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
 
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </main>

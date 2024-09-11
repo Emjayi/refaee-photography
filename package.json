@@ -13,7 +13,7 @@
     "@headlessui/tailwindcss": "^0.2.0",
     "@tabler/icons-react": "^3.14.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^11.5.2",
+    "framer-motion": "^11.5.4",
     "imagekitio-next": "^1.0.0",
     "lucide-react": "^0.438.0",
     "next": "14.0.3",
