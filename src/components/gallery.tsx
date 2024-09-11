@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import Lightbox from './lightbox'
 import { IKImage } from "imagekitio-react"
 import { motion } from 'framer-motion'
 import { navbarLinks } from '@/lib/data'
+import { Loader2 } from 'lucide-react'
 
 const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT
 
@@ -13,6 +14,7 @@ interface ImageData {
     filePath: string
     name: string
     createdAt: string
+    loaded: boolean
 }
 
 export default function Gallery() {
@@ -25,14 +27,9 @@ export default function Gallery() {
 
     const currentCategory = navbarLinks.works.find(link => link.link === pathname)?.name.toLowerCase() || ''
 
-    useEffect(() => {
-        if (currentCategory) {
-            fetchImages(currentCategory)
-        }
-    }, [currentCategory])
-
-    const fetchImages = async (category: string) => {
+    const fetchImages = useCallback(async (category: string) => {
         setLoading(true)
+        setImages([])
         try {
             const response = await fetch(`/api/images?category=${category}`)
             if (!response.ok) {
@@ -40,14 +37,29 @@ export default function Gallery() {
                 throw new Error(errorData.error || 'Failed to fetch images')
             }
             const data = await response.json()
-            setImages(data)
+            setImages(data.map((img: ImageData) => ({ ...img, loaded: false })))
         } catch (error) {
             console.error('Error fetching images:', error)
             setError(error instanceof Error ? error.message : 'An unknown error occurred')
-        } finally {
+        }
+    }, [])
+
+    useEffect(() => {
+        if (currentCategory) {
+            fetchImages(currentCategory)
+        }
+    }, [currentCategory, fetchImages])
+
+    const handleImageLoad = useCallback((index: number) => {
+        setImages(prevImages =>
+            prevImages.map((img, i) =>
+                i === index ? { ...img, loaded: true } : img
+            )
+        )
+        if (index < 5) {
             setLoading(false)
         }
-    }
+    }, [])
 
     const openLightbox = (index: number) => {
         setCurrentIndex(index)
@@ -64,33 +76,39 @@ export default function Gallery() {
 
     return (
         <div className="min-h-screen min-w-screen bg-white">
+            {loading && (
+                <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+                    <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+                </div>
+            )}
             <main className="container mx-auto px-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                    {loading
-                        ? Array.from({ length: 20 }).map((_, index) => (
-                            <div key={index} className="relative overflow-hidden rounded-lg bg-gray-200 animate-pulse" style={{ paddingBottom: '100%' }} />
-                        ))
-                        : images.map((image, index) => (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                transition={{ duration: 0.2, delay: 0.1 }}
-                                key={index}
-                                className="relative overflow-hidden rounded-lg cursor-pointer group"
-                                onClick={() => openLightbox(index)}
-                            >
-                                <IKImage
-                                    urlEndpoint={urlEndpoint}
-                                    path={image.filePath}
-                                    transformation={[{ height: "400", width: "400" }]}
-                                    lqip={{ active: true }}
-                                    loading="lazy"
-                                    alt={image.name}
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                </div>
-                            </motion.div>
-                        ))}
+                    {images.map((image, index) => (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: image.loaded ? 1 : 0 }}
+                            transition={{ duration: 0.2 }}
+                            key={image.filePath}
+                            className="relative overflow-hidden rounded-lg cursor-pointer group"
+                            onClick={() => openLightbox(index)}
+                        >
+                            {!image.loaded && (
+                                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+                            )}
+                            <IKImage
+                                urlEndpoint={urlEndpoint}
+                                path={image.filePath}
+                                transformation={[{ height: "400", width: "400" }]}
+                                lqip={{ active: true }}
+                                loading="lazy"
+                                onLoad={() => handleImageLoad(index)}
+                                alt={image.name}
+                                className={image.loaded ? '' : 'invisible'}
+                            />
+                            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
             </main>
             {lightboxOpen && (
