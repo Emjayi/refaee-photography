@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import { SetStateAction, useState } from 'react'
-import Lightbox from './lightbox'
+import Lightbox from '../../components/lightbox'
 
 const images = [
     { src: '/bg/01.jpg', alt: 'Image 1' },

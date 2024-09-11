@@ -9,7 +9,7 @@ import { Autoplay, Keyboard, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css'
 import 'swiper/css/navigation'
 
-const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
+const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
 export default function Lightbox({ images, currentIndex, onClose }: any) {
     const [imageIndex, setImageIndex] = useState(currentIndex)
