@@ -137,7 +137,7 @@ interface GalleryImageProps {
     onClick: () => void;
 }
 
-const GalleryImage = React.memo(({ image, index, isLoaded, onLoad, onClick }: GalleryImageProps) => {
+const GalleryImage = ({ image, index, isLoaded, onLoad, onClick }: GalleryImageProps) => {
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -172,4 +172,4 @@ const GalleryImage = React.memo(({ image, index, isLoaded, onLoad, onClick }: Ga
             </div>
         </motion.div>
     )
-})
+}
