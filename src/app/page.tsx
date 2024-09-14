@@ -70,10 +70,6 @@ export default async function Home() {
           }}
           spaceBetween={0}
           loop={true}
-          pagination={{
-            clickable: true,
-          }}
-          navigation={true}
           modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen">
           {
             imagesMobile.map((image, index) => (

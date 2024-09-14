@@ -53,7 +53,7 @@ export default function Gallery() {
         } catch (error) {
             console.error('Error fetching images:', error);
             if (error instanceof Error) {
-                setError(error.name === 'AbortError' ? 'Request timed out after 10 seconds' : error.message);
+                setError(error.name === 'AbortError' ? 'Cannot Fetch the Images, Pleas check your internet connection.' : error.message);
             } else {
                 setError('An unknown error occurred');
             }
