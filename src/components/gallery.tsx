@@ -35,7 +35,7 @@ export default function Gallery() {
         setLoadedImages([]);
         setError(null);
 
-        const timeoutDuration = 10000; // 10 seconds
+        const timeoutDuration = 5000; // 10 seconds
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
 
@@ -92,7 +92,7 @@ export default function Gallery() {
     }
 
     if (error) {
-        return <div className="text-red-500 text-center m-10 h-48 flex items-center justify-center">Error: {error}</div>
+        return <div className="text-red-500 text-center m-10 h-48 flex items-center justify-center">{error}</div>
     }
 
     return (
@@ -141,8 +141,8 @@ const GalleryImage = ({ image, index, isLoaded, onLoad, onClick }: GalleryImageP
     return (
         <motion.div
             initial={{ opacity: 0 }}
-            whileInView={isLoaded ? { opacity: 1 } : {}}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            animate={isLoaded ? { opacity: 1 } : {}}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
             className="relative overflow-hidden rounded-lg cursor-pointer group"
             onClick={onClick}
             aria-label={`Open image ${image.name} in lightbox`}
