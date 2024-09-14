@@ -6,7 +6,7 @@ export const navbarLinks = {
         { name: "Packshot", link: "/works/packshot" },
         { name: "Hotels", link: "/works/hotels" },
         { name: "Food", link: "/works/food" },
-        { name: "Factory", link: "/works/factory" },
+        { name: "Industrial", link: "/works/industrial" },
         { name: "RedGold", link: "/works/redgold" },
     ],
     info: [

@@ -8,9 +8,24 @@ const Navbar = () => {
     const path = usePathname()
     const [isHome, setHome] = useState(true)
     useEffect(() => { if (path === "/" || path === "/about") { setHome(true) } else { setHome(false) };[] })
-
     const [infoDisplay, setInfoDisplay] = useState('hidden')
     const [worksDisplay, setWorksDisplay] = useState('hidden')
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 768) {  // 768px is typically the breakpoint for md in Tailwind
+                setInfoDisplay('hidden')
+                setWorksDisplay('hidden')
+            } else if (path === "/") {
+                setInfoDisplay('hidden')
+                setWorksDisplay('hidden')
+            }
+        }
+
+        handleResize()  // Call once to set initial state
+        window.addEventListener('resize', handleResize)
+
+        return () => window.removeEventListener('resize', handleResize)
+    }, [path])
     const works = () => {
         if (worksDisplay === 'hidden') {
             if (infoDisplay === 'hidden') { setWorksDisplay('') } else { setInfoDisplay('hidden'); setWorksDisplay('') }
@@ -31,19 +46,37 @@ const Navbar = () => {
                     <li className={'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion text-ellipsis cursor-pointer'}>Sales</li>
                 </ul>
             </div>
-            <div id="works" className={'flex justify-center' + (worksDisplay)}>
-                <ul className='flex gap-4 '>
-                    {navbarLinks.works.map((link, idx) => (
-                        <li key={idx} className={(link.link === path) ? 'text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
-                    ))}
-                </ul>
+            <div className='hidden md:flex justify-center'>
+                <div id="works" className={(worksDisplay)}>
+                    <ul className='flex gap-4 '>
+                        {navbarLinks.works.map((link, idx) => (
+                            <li key={idx} className={(link.link === path) ? 'text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
+                        ))}
+                    </ul>
+                </div>
+                <div id="info" className={(infoDisplay)}>
+                    <ul className='flex gap-4 '>
+                        {navbarLinks.info.map((link, idx) => (
+                            <li key={idx} className={(link.link === path) ? 'text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
+                        ))}
+                    </ul>
+                </div>
             </div>
-            <div id="info" className={'flex justify-center' + (infoDisplay)}>
-                <ul className='flex gap-4 '>
-                    {navbarLinks.info.map((link, idx) => (
-                        <li key={idx} className={(link.link === path) ? 'text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
-                    ))}
-                </ul>
+            <div className='md:hidden flex justify-center'>
+                <div id="works" className={(worksDisplay)}>
+                    <ul className='flex gap-4 flex-col'>
+                        {navbarLinks.works.map((link, idx) => (
+                            <li key={idx} className={(link.link === path) ? 'text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
+                        ))}
+                    </ul>
+                </div>
+                <div id="info" className={(infoDisplay)}>
+                    <ul className='flex gap-4 flex-col'>
+                        {navbarLinks.info.map((link, idx) => (
+                            <li key={idx} className={(link.link === path) ? 'text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </nav>
     )

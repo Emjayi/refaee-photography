@@ -18,7 +18,8 @@ export default async function Home() {
     import("public/bg/05.jpg"),
     import("public/bg/06.jpg"),
     import("public/bg/07.jpg"),
-    import("public/bg/08.jpg")
+    import("public/bg/08.jpg"),
+    import("public/bg/10.jpg")
   ])
   const imagesMobile = await Promise.all([
     import("public/bg-mobile/1.jpg"),
@@ -33,52 +34,56 @@ export default async function Home() {
 
   return (
     <div className='flex justify-center items-center '>
-      <Swiper
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        keyboard={{
-          enabled: true,
-        }}
-        spaceBetween={0}
-        loop={true}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
-        modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen hidden md:block">
-        {
-          images.map((image, index) => (
-            <SwiperSlide key={index + 1}>
-              <Image src={image.default} alt={`Image ${index + 1}`} className='max-h-screen min-h-screen object-contain md:object-cover '></Image>
-            </SwiperSlide>
-          ))
-        }
-      </Swiper>
-      <Swiper
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        keyboard={{
-          enabled: true,
-        }}
-        spaceBetween={0}
-        loop={true}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
-        modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen block md:hidden">
-        {
-          imagesMobile.map((image, index) => (
-            <SwiperSlide key={index + 1}>
-              <Image src={image.default} alt={`Image ${index + 1}`} className='max-h-screen min-h-screen object-contain md:object-cover '></Image>
-            </SwiperSlide>
-          ))
-        }
-      </Swiper>
+      <div className=' hidden md:block'>
+        <Swiper
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
+          keyboard={{
+            enabled: true,
+          }}
+          spaceBetween={0}
+          loop={true}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen">
+          {
+            images.map((image, index) => (
+              <SwiperSlide key={index + 1}>
+                <Image src={image.default} alt={`Image ${index + 1}`} className='max-h-screen min-h-screen object-contain md:object-cover '></Image>
+              </SwiperSlide>
+            ))
+          }
+        </Swiper>
+      </div>
+      <div className='block md:hidden'>
+        <Swiper
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
+          keyboard={{
+            enabled: true,
+          }}
+          spaceBetween={0}
+          loop={true}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen">
+          {
+            imagesMobile.map((image, index) => (
+              <SwiperSlide key={index + 1}>
+                <Image src={image.default} alt={`Image ${index + 1}`} className='max-h-screen min-h-screen object-cover '></Image>
+              </SwiperSlide>
+            ))
+          }
+        </Swiper>
+      </div>
       <footer className="footer fixed w-screen bottom-0">
         <div className="w-full mx-auto max-w-screen-xl p-4 flex flex-col items-center justify-center">
           <p>
