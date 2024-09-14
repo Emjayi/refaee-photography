@@ -112,18 +112,14 @@ export default function Home() {
       </div>
 
       {/* Mobile Slider */}
-      <div className='block md:hidden w-screen h-screen'>
+      <div className='block md:hidden w-screen h-[100dvh]'>
         <Swiper
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,
           }}
-          keyboard={{
-            enabled: true,
-          }}
           spaceBetween={0}
           loop={true}
-          navigation={true}
           modules={[Autoplay, Keyboard, Pagination, Navigation]}
           className="cursor-default w-full h-full"
         >
