@@ -92,7 +92,7 @@ export default function Gallery() {
     }
 
     if (error) {
-        return <div className="text-red-500 text-center m-10 h-48 flex items-center justify-center">{error}</div>
+        return <div className="text-red-500 text-center m-10 h-[60vh] flex items-center justify-center">{error}</div>
     }
 
     return (
@@ -142,7 +142,7 @@ const GalleryImage = ({ image, index, isLoaded, onLoad, onClick }: GalleryImageP
         <motion.div
             initial={{ opacity: 0 }}
             animate={isLoaded ? { opacity: 1 } : {}}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
+            transition={{ duration: 0.25, delay: index * 0.05 }}
             className="relative overflow-hidden rounded-lg cursor-pointer group"
             onClick={onClick}
             aria-label={`Open image ${image.name} in lightbox`}

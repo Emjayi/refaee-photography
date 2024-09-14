@@ -79,7 +79,7 @@ const socialLinks = [
 
 export default function Home() {
   return (
-    <div className='flex justify-center items-center relative'>
+    <div className='flex justify-center items-center relative bg-black'>
       {/* Desktop Slider */}
       <div className='hidden md:block w-screen h-screen'>
         <Swiper
@@ -94,7 +94,7 @@ export default function Home() {
           loop={true}
           navigation={true}
           modules={[Autoplay, Keyboard, Pagination, Navigation]}
-          className="cursor-default w-full h-full"
+          className="cursor-default w-full h-full bg-black"
         >
           {desktopImages.map((src, index) => (
             <SwiperSlide key={`desktop-${index}`}>
