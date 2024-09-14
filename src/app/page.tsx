@@ -19,6 +19,16 @@ export default async function Home() {
     import("public/bg/07.jpg"),
     import("public/bg/08.jpg")
   ])
+  const imagesMobile = await Promise.all([
+    import("public/bg-mobile/1.jpg"),
+    import("public/bg-mobile/2.jpg"),
+    import("public/bg-mobile/3.jpg"),
+    import("public/bg-mobile/4.jpg"),
+    import("public/bg-mobile/5.jpg"),
+    import("public/bg-mobile/6.jpg"),
+    import("public/bg-mobile/7.jpg"),
+    import("public/bg-mobile/8.jpg")
+  ])
 
   return (
     <div className='flex justify-center items-center '>
@@ -36,7 +46,7 @@ export default async function Home() {
           clickable: true,
         }}
         navigation={true}
-        modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen">
+        modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen hidden md:block">
         {
           images.map((image, index) => (
             <SwiperSlide key={index + 1}>
@@ -45,8 +55,31 @@ export default async function Home() {
           ))
         }
       </Swiper>
+      <Swiper
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        keyboard={{
+          enabled: true,
+        }}
+        spaceBetween={0}
+        loop={true}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Autoplay, Keyboard, Pagination, Navigation]} className=" cursor-default w-screen h-screen block md:hidden">
+        {
+          imagesMobile.map((image, index) => (
+            <SwiperSlide key={index + 1}>
+              <Image src={image.default} alt={`Image ${index + 1}`} className='max-h-screen min-h-screen object-contain md:object-cover '></Image>
+            </SwiperSlide>
+          ))
+        }
+      </Swiper>
       <footer className="footer fixed w-screen bottom-0">
-        <div className="w-full mx-auto max-w-screen-xl p-4 md:flex flex-col md:items-center md:justify-center">
+        <div className="w-full mx-auto max-w-screen-xl p-4 flex flex-col items-center justify-center">
           <p>
             <span className="text-sm text-gray-400 sm:text-center">Alireza Refaei
             </span>

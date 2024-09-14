@@ -9,12 +9,14 @@ import { Autoplay, Keyboard, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css'
 import 'swiper/css/navigation'
 import Loading from '@/app/loading'
+import { Lens } from './ui/lens'
 
 const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
 export default function Lightbox({ images, currentIndex, onClose }: any) {
     const [imageIndex, setImageIndex] = useState(currentIndex)
     const [imageLoading, setImageLoading] = useState(true)
+    const [hovering, setHovering] = useState(false);
 
     return (
         <div
@@ -35,20 +37,22 @@ export default function Lightbox({ images, currentIndex, onClose }: any) {
                     onSlideChange={() => (setImageLoading(true))}
                 >
                     {images.map((image: { src: string; alt: string }, index: number) => (
-                        <SwiperSlide key={index} onLoad={() => (setImageLoading(false))} >
-                            <IKImage
-                                priority
-                                urlEndpoint={urlEndpoint}
-                                lqip={{ active: true }}
-                                loading="lazy"
-                                path={image.src}
-                                fill
-                                quality={100}
-                                alt={image.alt}
+                        <Lens hovering={hovering} setHovering={setHovering}>
+                            <SwiperSlide key={index} onLoad={() => (setImageLoading(false))} >
+                                <IKImage
+                                    priority
+                                    urlEndpoint={urlEndpoint}
+                                    lqip={{ active: true }}
+                                    loading="lazy"
+                                    path={image.src}
+                                    fill
+                                    quality={100}
+                                    alt={image.alt}
 
-                                className="object-contain"
-                            />
-                        </SwiperSlide>
+                                    className="object-contain"
+                                />
+                            </SwiperSlide>
+                        </Lens>
                     ))}
                     <div className='w-full flex gap-2 justify-center fixed bottom-10 z-10'>
                         <SlidePrevButton />

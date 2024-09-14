@@ -31,14 +31,14 @@ const Navbar = () => {
                     <li className={'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion text-ellipsis cursor-pointer'}>Sales</li>
                 </ul>
             </div>
-            <div id="works" className={'flex justify-center ' + (worksDisplay)}>
+            <div id="works" className={'flex justify-center' + (worksDisplay)}>
                 <ul className='flex gap-4 '>
                     {navbarLinks.works.map((link, idx) => (
                         <li key={idx} className={(link.link === path) ? 'text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
                     ))}
                 </ul>
             </div>
-            <div id="info" className={'flex justify-center ' + (infoDisplay)}>
+            <div id="info" className={'flex justify-center' + (infoDisplay)}>
                 <ul className='flex gap-4 '>
                     {navbarLinks.info.map((link, idx) => (
                         <li key={idx} className={(link.link === path) ? 'text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer' : 'text-zinc-400 hover:text-zinc-200 duration-200 mix-blend-exclusion bg-blend-luminosity text-ellipsis cursor-pointer'}><Link href={link.link}>{link.name}</Link></li>
