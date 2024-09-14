@@ -37,8 +37,8 @@ export default function Lightbox({ images, currentIndex, onClose }: any) {
                     onSlideChange={() => (setImageLoading(true))}
                 >
                     {images.map((image: { src: string; alt: string }, index: number) => (
-                        <Lens hovering={hovering} setHovering={setHovering}>
-                            <SwiperSlide key={index} onLoad={() => (setImageLoading(false))} >
+                        <Lens key={index} hovering={hovering} setHovering={setHovering}>
+                            <SwiperSlide onLoad={() => (setImageLoading(false))} >
                                 <IKImage
                                     priority
                                     urlEndpoint={urlEndpoint}

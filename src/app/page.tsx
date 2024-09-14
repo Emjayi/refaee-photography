@@ -18,7 +18,7 @@ export default async function Home() {
     import("public/bg/05.jpg"),
     import("public/bg/06.jpg"),
     import("public/bg/07.jpg"),
-    import("public/bg/08.jpg"),
+    import("public/bg/08.jpg")
   ])
   const imagesMobile = await Promise.all([
     import("public/bg-mobile/1.jpg"),
