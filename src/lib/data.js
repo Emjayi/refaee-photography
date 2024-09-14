@@ -7,6 +7,7 @@ export const navbarLinks = {
         { name: "Hotels", link: "/works/hotels" },
         { name: "Food", link: "/works/food" },
         { name: "Factory", link: "/works/factory" },
+        { name: "RedGold", link: "/works/redgold" },
     ],
     info: [
         { name: "About", link: "/about" },

@@ -8,18 +8,22 @@ import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
 import { Autoplay, Keyboard, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css'
 import 'swiper/css/navigation'
+import Loading from '@/app/loading'
 
 const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
 export default function Lightbox({ images, currentIndex, onClose }: any) {
     const [imageIndex, setImageIndex] = useState(currentIndex)
+    const [imageLoading, setImageLoading] = useState(true)
 
     return (
         <div
             className="fixed inset-0 bg-white flex items-center justify-center z-50"
             onClick={onClose}
         >
-
+            {imageLoading && (
+                <Loading />
+            )}
             <div
                 className="fixed flex max-h-full p-4"
                 onClick={(e) => e.stopPropagation()}
@@ -28,9 +32,10 @@ export default function Lightbox({ images, currentIndex, onClose }: any) {
                     initialSlide={imageIndex}
                     modules={[Autoplay, Keyboard, Pagination, Navigation]}
                     className={`relative w-screen h-[80dvh]`}
+                    onSlideChange={() => (setImageLoading(true))}
                 >
                     {images.map((image: { src: string; alt: string }, index: number) => (
-                        <SwiperSlide key={index}>
+                        <SwiperSlide key={index} onLoad={() => (setImageLoading(false))} >
                             <IKImage
                                 priority
                                 urlEndpoint={urlEndpoint}
@@ -40,6 +45,7 @@ export default function Lightbox({ images, currentIndex, onClose }: any) {
                                 fill
                                 quality={100}
                                 alt={image.alt}
+
                                 className="object-contain"
                             />
                         </SwiperSlide>
