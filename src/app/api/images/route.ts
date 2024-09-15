@@ -11,6 +11,8 @@ const imagekit = new ImageKit({
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const category = searchParams.get('category')
+    const page = parseInt(searchParams.get('page') || '1', 10)
+    const limit = parseInt(searchParams.get('limit') || '10', 10)
 
     if (!category) {
         return NextResponse.json({ error: 'Category is required' }, { status: 400 })
@@ -19,10 +21,15 @@ export async function GET(request: NextRequest) {
     try {
         const images = await imagekit.listFiles({
             path: `/${category}`,
-            sort: 'DESC_CREATED'
+            sort: 'DESC_CREATED',
+            limit: limit,
+            skip: (page - 1) * limit
         })
 
-        return NextResponse.json(images)
+        return NextResponse.json({
+            images,
+            hasMore: images.length === limit
+        })
     } catch (error) {
         console.error('Error in /api/images:', error)
         return NextResponse.json(

@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { navbarLinks } from '@/lib/data'
 import Loading from '@/app/loading'
 import React from 'react'
+import { useInView } from 'react-intersection-observer'
 
 const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT
 
@@ -25,58 +26,66 @@ export default function Gallery() {
     const [lightboxOpen, setLightboxOpen] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(0)
     const [error, setError] = useState<string | null>(null)
+    const [page, setPage] = useState(1)
+    const [hasMore, setHasMore] = useState(true)
     const isMounted = useRef(true)
 
     const currentCategory = navbarLinks.works.find(link => link.link === pathname)?.name.toLowerCase() || ''
 
-    const fetchImages = useCallback(async (category: string) => {
-        setLoading(true);
-        setImages([]);
-        setLoadedImages([]);
-        setError(null);
+    const { ref, inView } = useInView({
+        threshold: 0,
+    })
 
-        const timeoutDuration = 5000; // 10 seconds
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeoutDuration);
+    const fetchImages = useCallback(async (category: string, pageNum: number) => {
+        if (!hasMore) return
+
+        setLoading(true)
+        setError(null)
 
         try {
-            const response = await fetch(`/api/images?category=${category}`, {
-                signal: controller.signal
-            });
-            clearTimeout(timeoutId);
+            const response = await fetch(`/api/images?category=${category}&page=${pageNum}&limit=10`)
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to fetch images');
+                const errorData = await response.json()
+                throw new Error(errorData.error || 'Failed to fetch images')
             }
 
-            const data: ImageData[] = await response.json();
+            const data = await response.json()
             if (isMounted.current) {
-                setImages(data);
+                setImages(prev => [...prev, ...data.images])
+                setHasMore(data.hasMore)
+                setPage(prev => prev + 1)
             }
         } catch (error: any) {
-            console.error('Error fetching images:', error);
+            console.error('Error fetching images:', error)
             if (isMounted.current) {
-                setError(error.name === 'AbortError'
-                    ? 'Cannot load the images. Please check your internet connection or simply reload the page.'
-                    : error.message || 'An unknown error occurred');
+                setError(error.message || 'An unknown error occurred')
             }
         } finally {
             if (isMounted.current) {
-                setLoading(false);
+                setLoading(false)
             }
         }
-    }, [])
+    }, [hasMore])
 
     useEffect(() => {
         isMounted.current = true
         if (currentCategory) {
-            fetchImages(currentCategory)
+            setImages([])
+            setPage(1)
+            setHasMore(true)
+            fetchImages(currentCategory, 1)
         }
         return () => {
             isMounted.current = false
         }
     }, [currentCategory, fetchImages])
+
+    useEffect(() => {
+        if (inView && !loading) {
+            fetchImages(currentCategory, page)
+        }
+    }, [inView, loading, fetchImages, currentCategory, page])
 
     const handleImageLoad = useCallback((index: number) => {
         setLoadedImages(prev => [...prev, index])
@@ -97,12 +106,7 @@ export default function Gallery() {
 
     return (
         <div className="min-h-screen min-w-screen bg-white">
-            {loading && (
-                <div className="flex items-center justify-center h-48">
-                    <Loading />
-                </div>
-            )}
-            <main className={`container mx-auto px-4 transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
+            <main className={`container mx-auto px-4 transition-opacity duration-500 ${loading && images.length === 0 ? 'opacity-0' : 'opacity-100'}`}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
                     {images.map((image, index) => (
                         <GalleryImage
@@ -115,6 +119,12 @@ export default function Gallery() {
                         />
                     ))}
                 </div>
+                {loading && (
+                    <div className="flex items-center justify-center h-48">
+                        <Loading />
+                    </div>
+                )}
+                <div ref={ref} style={{ height: '10px' }} />
             </main>
             <AnimatePresence>
                 {lightboxOpen && (
