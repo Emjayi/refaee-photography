@@ -11,9 +11,9 @@ export const navbarLinks = {
     ],
     info: [
         { name: "About", link: "/about" },
-        { name: "Backstage", link: "/backstage" },
-        { name: "Portfolio", link: "/portfolio" },
-        { name: "Exhibition", link: "/exhibition" },
+        { name: "Backstage", link: "#" },
+        { name: "Portfolio", link: "#" },
+        { name: "Exhibition", link: "#" },
         { name: "Contact", link: "/contact" }
     ]
 }

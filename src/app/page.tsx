@@ -36,7 +36,7 @@ const mobileImages: string[] = [
 // Social Media Links Data
 const socialLinks = [
   {
-    href: 'https://www.instagram.com/',
+    href: 'https://www.instagram.com/alirezarefaei',
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         {/* Instagram SVG Path */}
@@ -49,7 +49,7 @@ const socialLinks = [
     ),
   },
   {
-    href: 'https://www.behance.net/',
+    href: 'https://www.behance.net/alirezarefaei/',
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         {/* Behance SVG Path */}
