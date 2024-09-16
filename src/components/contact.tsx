@@ -31,17 +31,6 @@ const Contact: FC = () => {
         }
     }
 
-    const handleWhatsAppClick = () => {
-        const phoneNumber = '1234567890'; // Replace with your WhatsApp number
-        const message = encodeURIComponent('Hello, I would like to get in touch!');
-        window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
-    };
-
-    const handleAnotherAction = () => {
-        // Define the action for the other button
-        alert('Another action triggered!');
-    };
-
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className='mb-5'>
