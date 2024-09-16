@@ -1,3 +1,5 @@
+'use client'
+import { usePathname } from 'next/navigation';
 import React from 'react'
 
 const socialLinks = [
@@ -44,29 +46,34 @@ const socialLinks = [
 ]
 
 const Footer = () => {
+    const path = usePathname();
+    const segments = path.split('/').filter(Boolean);
+    const showFooter = !(segments[0] === 'works' && segments.length >= 3);
     return (
-        <footer className="footer w-full bottom-0">
-            <div className="w-full mx-auto max-w-screen-xl p-4 flex flex-col items-center justify-center">
-                <p>
-                    <span className="text-sm text-gray-400 sm:text-center">© {new Date().getFullYear()} Alireza Refaei
-                    </span>
-                </p>
-                <div className="flex gap-2 mt-2">
-                    {socialLinks.map((link, index) => (
-                        <a
-                            key={index}
-                            href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
-                            aria-label={`Visit ${link.href.split('//')[1].split('.')[0]} profile`}
-                        >
-                            {link.icon}
-                        </a>
-                    ))}
+        <>
+            {showFooter && <footer className="footer w-full bottom-0">
+                <div className="w-full mx-auto max-w-screen-xl p-4 flex flex-col items-center justify-center">
+                    <p>
+                        <span className="text-sm text-gray-400 sm:text-center">© {new Date().getFullYear()} Alireza Refaei
+                        </span>
+                    </p>
+                    <div className="flex gap-2 mt-2">
+                        {socialLinks.map((link, index) => (
+                            <a
+                                key={index}
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
+                                aria-label={`Visit ${link.href.split('//')[1].split('.')[0]} profile`}
+                            >
+                                {link.icon}
+                            </a>
+                        ))}
+                    </div>
                 </div>
-            </div>
-        </footer>
+            </footer>}
+        </>
     )
 }
 

@@ -1,172 +1,139 @@
-// components/gallery.tsx
+'use client';
 
-'use client'
+import { useState, useEffect, useCallback } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { IKImage } from 'imagekitio-react';
+import { motion } from 'framer-motion';
+import { navbarLinks } from '@/lib/data';
+import Loading from '@/app/loading';
+import { useImageCache } from '@/contexts/ImageCacheContext';
 
-import { useState, useEffect, useCallback } from 'react'
-import { usePathname } from 'next/navigation'
-import Lightbox from './lightbox'
-import { IKImage } from 'imagekitio-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { navbarLinks } from '@/lib/data'
-import Loading from '@/app/loading'
-import { useInView } from 'react-intersection-observer'
-
-const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT
+const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
 interface ImageData {
-    id: string
-    filePath: string
-    name: string
-    createdAt: string
+    id: string;
+    filePath: string;
+    name: string;
+    createdAt: string;
+    hash: string;
 }
 
 export default function Gallery() {
-    const pathname = usePathname()
-    const [images, setImages] = useState<ImageData[]>([])
-    const [loadedImages, setLoadedImages] = useState<number[]>([])
-    const [loading, setLoading] = useState(true)
-    const [lightboxOpen, setLightboxOpen] = useState(false)
-    const [currentIndex, setCurrentIndex] = useState(0)
-    const [error, setError] = useState<string | null>(null)
-    const [page, setPage] = useState(1)
-    const [hasMore, setHasMore] = useState(true)
-    const [targetImage, setTargetImage] = useState<ImageData | null>(null)
+    const pathname = usePathname();
+    const router = useRouter();
+    const [images, setImages] = useState<ImageData[]>([]);
+    const [loadedImages, setLoadedImages] = useState<number[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const { cache, setCache } = useImageCache();
 
     const currentCategory =
-        navbarLinks.works.find((link) => link.link === pathname)?.name.toLowerCase() || ''
+        navbarLinks.works.find((link) => link.link === pathname)?.name.toLowerCase() || '';
 
-    const { ref, inView } = useInView({
-        threshold: 0,
-    })
+    useEffect(() => {
+        if (!currentCategory) return;
+
+        if (cache[currentCategory]) {
+            // Use cached images
+            setImages(cache[currentCategory]);
+            setLoading(false);
+        } else {
+            // Fetch images and cache them
+            const fetchImages = async () => {
+                setError(null);
+                setLoading(true);
+
+                try {
+                    const response = await fetch(`/api/images?category=${currentCategory}&limit=1000`);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Failed to fetch images');
+                    }
+                    const data = await response.json();
+
+                    const fetchedImages = data.images.map((image: any) => ({
+                        id: image.fileId,
+                        filePath: image.filePath,
+                        name: image.name,
+                        createdAt: image.createdAt,
+                        hash: image.hash,
+                    }));
+
+                    setImages(fetchedImages);
+                    setCache((prevCache) => ({
+                        ...prevCache,
+                        [currentCategory]: fetchedImages,
+                    }));
+                } catch (error: any) {
+                    console.error('Error fetching images:', error);
+                    setError(error.message || 'An unknown error occurred');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchImages();
+        }
+    }, [currentCategory, cache, setCache]);
 
     const fetchImages = useCallback(
-        async (category: string, pageNum: number) => {
-            if (!hasMore) return
-            setError(null)
+        async (category: string) => {
+            setError(null);
+            setLoading(true);
 
             try {
-                const response = await fetch(
-                    `/api/images?category=${category}&page=${pageNum}&limit=10`
-                )
-
+                const response = await fetch(`/api/images?category=${category}&limit=1000`);
                 if (!response.ok) {
-                    const errorData = await response.json()
-                    throw new Error(errorData.error || 'Failed to fetch images')
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to fetch images');
                 }
+                const data = await response.json();
 
-                const data = await response.json()
-                setImages((prev) => [...prev, ...data.images])
-                setHasMore(data.hasMore)
-                setPage((prev) => prev + 1)
+                const uniqueImages = data.images.map((image: any) => ({
+                    id: image.fileId,
+                    filePath: image.filePath,
+                    name: image.name,
+                    createdAt: image.createdAt,
+                    hash: image.hash,
+                }));
+
+                setImages(uniqueImages);
             } catch (error: any) {
-                console.error('Error fetching images:', error)
-                setError(error.message || 'An unknown error occurred')
+                console.error('Error fetching images:', error);
+                setError(error.message || 'An unknown error occurred');
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
         },
-        [hasMore]
-    )
-
-    const fetchTargetImage = useCallback(async (id: string) => {
-        try {
-            const response = await fetch(`/api/image?id=${id}`)
-            if (!response.ok) {
-                const errorData = await response.json()
-                throw new Error(errorData.error || 'Failed to fetch target image')
-            }
-            const data = await response.json()
-            setTargetImage(data.image)
-            setLightboxOpen(true)
-        } catch (error: any) {
-            console.error('Error fetching target image:', error)
-            setError(error.message || 'An unknown error occurred')
-        }
-    }, [])
+        []
+    );
 
     useEffect(() => {
         if (currentCategory) {
-            setImages([])
-            setPage(1)
-            setHasMore(true)
-            setError(null)
-            fetchImages(currentCategory, 1)
+            setImages([]);
+            setError(null);
+            fetchImages(currentCategory);
         }
-    }, [currentCategory, fetchImages])
-
-    useEffect(() => {
-        if (inView && !loading) {
-            fetchImages(currentCategory, page)
-        }
-    }, [inView, loading, fetchImages, currentCategory, page])
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const hash = window.location.hash.substring(1)
-            if (hash) {
-                fetchTargetImage(hash)
-            }
-        }
-    }, [fetchTargetImage])
+    }, [currentCategory, fetchImages]);
 
     const handleImageLoad = useCallback((index: number) => {
-        setLoadedImages((prev) => [...prev, index])
-    }, [])
+        setLoadedImages((prev) => [...prev, index]);
+    }, []);
 
-    const openLightbox = useCallback(
+    const openImagePage = useCallback(
         (index: number) => {
-            setCurrentIndex(index)
-            setLightboxOpen(true)
-            const imageHash = images[index].id
-            if (typeof window !== 'undefined') {
-                window.history.replaceState(null, '', `${pathname}#${imageHash}`)
-            }
+            const imageHash = images[index].hash;
+            router.push(`/works/${currentCategory}/${imageHash}`);
         },
-        [images, pathname]
-    )
-
-    const closeLightbox = () => {
-        setLightboxOpen(false)
-        setTargetImage(null)
-        if (typeof window !== 'undefined') {
-            window.history.replaceState(null, '', pathname)
-        }
-    }
-
-    // Handle hash changes
-    useEffect(() => {
-        const handleHashChange = () => {
-            const hash = window.location.hash.substring(1)
-            if (hash) {
-                const index = images.findIndex((image) => image.id === hash)
-                if (index !== -1) {
-                    setCurrentIndex(index)
-                    setLightboxOpen(true)
-                } else {
-                    fetchTargetImage(hash)
-                }
-            } else {
-                closeLightbox()
-            }
-        }
-
-        if (typeof window !== 'undefined') {
-            window.addEventListener('hashchange', handleHashChange)
-        }
-
-        return () => {
-            if (typeof window !== 'undefined') {
-                window.removeEventListener('hashchange', handleHashChange)
-            }
-        }
-    }, [images, fetchTargetImage])
+        [images, router, currentCategory]
+    );
 
     if (error) {
         return (
             <div className="text-red-500 text-center m-10 h-[60vh] flex items-center justify-center">
                 {error}
             </div>
-        )
+        );
     }
 
     return (
@@ -175,7 +142,7 @@ export default function Gallery() {
                 className={`container mx-auto px-4 transition-opacity duration-500 ${loading && images.length === 0 ? 'opacity-0' : 'opacity-100'
                     }`}
             >
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     {images.map((image, index) => (
                         <GalleryImage
                             key={image.id}
@@ -183,7 +150,7 @@ export default function Gallery() {
                             index={index}
                             isLoaded={loadedImages.includes(index)}
                             onLoad={() => handleImageLoad(index)}
-                            onClick={() => openLightbox(index)}
+                            onClick={() => openImagePage(index)}
                         />
                     ))}
                 </div>
@@ -192,27 +159,10 @@ export default function Gallery() {
                         <Loading />
                     </div>
                 )}
-                <div ref={ref} style={{ height: '10px' }} />
             </main>
-            <AnimatePresence>
-                {lightboxOpen && (
-                    <Lightbox
-                        images={
-                            targetImage
-                                ? [{ src: targetImage.filePath, alt: targetImage.name, id: targetImage.id }]
-                                : images.map((img) => ({ src: img.filePath, alt: img.name, id: img.id }))
-                        }
-                        currentIndex={targetImage ? 0 : currentIndex}
-                        onClose={closeLightbox}
-                        pathname={pathname}
-                    />
-                )}
-            </AnimatePresence>
         </div>
-    )
+    );
 }
-
-
 interface GalleryImageProps {
     image: ImageData;
     index: number;
@@ -226,21 +176,21 @@ const GalleryImage = ({ image, index, isLoaded, onLoad, onClick }: GalleryImageP
         <motion.div
             initial={{ opacity: 0 }}
             animate={isLoaded ? { opacity: 1 } : {}}
-            transition={{ duration: 0.25, delay: index * 0.05 }}
+            transition={{ duration: 0.25, delay: 0.05 }}
             className="relative overflow-hidden rounded-lg cursor-pointer group"
             onClick={onClick}
-            aria-label={`Open image ${image.name} in lightbox`}
+            aria-label={`Open image ${image.name}`}
             role="button"
             tabIndex={0}
             onKeyPress={(e) => {
                 if (e.key === 'Enter') onClick();
             }}
         >
+
             {!isLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                    <Loading />
-                </div>
+                <div className="absolute inset-0 bg-gray-400 animate-pulse" />
             )}
+
             <IKImage
                 urlEndpoint={urlEndpoint}
                 path={image.filePath}
@@ -252,8 +202,8 @@ const GalleryImage = ({ image, index, isLoaded, onLoad, onClick }: GalleryImageP
                 className={`w-full h-full object-cover transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'
                     }`}
             />
+
             <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                {/* Optional overlay content */}
             </div>
         </motion.div>
     );
