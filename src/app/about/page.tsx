@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import Image from 'next/image'
 import alireza from '/public/Alireza.jpg'
-import alirezaMobile from '/public/alireza-mobile.jpg'
+import alirezaMobile from '/public/Alireza-mobile.jpg'
 
 
 const Page: NextPage = () => {
