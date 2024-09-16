@@ -4,7 +4,7 @@
 
 import { useContext, useEffect, useState } from 'react';
 import { IKImage } from 'imagekitio-react';
-import { ImageContext } from './layout';
+import { ImageContext } from '@/contexts/ImageContext';
 import Loading from '@/app/loading';
 import { motion } from 'framer-motion';
 import { set } from 'date-fns';

@@ -1,10 +1,11 @@
-// app/works/[category]/layout.tsx
+// src/app/works/[category]/layout.tsx
 
 'use client';
 
-import { useEffect, useState, useCallback, createContext, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, ArrowRight, ArrowLeftCircle, LayoutGrid } from 'lucide-react';
+import { ArrowLeft, ArrowRight, LayoutGrid } from 'lucide-react';
+import { ImageContext } from '@/contexts/ImageContext';
 
 interface ImageData {
     id: string;
@@ -14,14 +15,6 @@ interface ImageData {
     hash: string;
 }
 
-interface ImageContextType {
-    images: ImageData[];
-    currentIndex: number;
-    error: string | null;
-}
-
-export const ImageContext = createContext<ImageContextType | null>(null);
-
 export default function CategoryLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const params = useParams();
@@ -29,9 +22,6 @@ export default function CategoryLayout({ children }: { children: React.ReactNode
     const [images, setImages] = useState<ImageData[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [error, setError] = useState<string | null>(null);
-
-    const touchStartX = useRef<number | null>(null);
-    const touchEndX = useRef<number | null>(null);
 
     // Fetch images for the category
     const fetchImages = useCallback(async () => {
@@ -93,20 +83,16 @@ export default function CategoryLayout({ children }: { children: React.ReactNode
         setCurrentIndex(newIndex);
     };
 
-
     return (
         <ImageContext.Provider value={{ images, currentIndex, error }}>
             <div
                 className="fixed inset-0 overflow-hidden bg-white flex items-center justify-center z-50"
                 onClick={handleClose}
             >
-                <div
-                    className="fixed flex max-h-full p-4"
-                    onClick={(e) => e.stopPropagation()}
-                >
+                <div className="fixed flex max-h-full p-4" onClick={(e) => e.stopPropagation()}>
                     <div className="relative flex items-center justify-center">
                         {/* Buttons */}
-                        <div className='w-full flex gap-6 md:gap-2 justify-center fixed md:bottom-10 bottom-2 z-10'>
+                        <div className="w-full flex gap-6 md:gap-2 justify-center fixed md:bottom-10 bottom-2 z-10">
                             {hash && (
                                 <>
                                     {/* Desktop */}
@@ -115,7 +101,7 @@ export default function CategoryLayout({ children }: { children: React.ReactNode
                                             e.stopPropagation();
                                             handlePrev();
                                         }}
-                                        className="hidden md:block text-zinc-400  hover:text-zinc-800 duration-300"
+                                        className="hidden md:block text-zinc-400 hover:text-zinc-800 duration-300"
                                     >
                                         <ArrowLeft size={16} />
                                         <span className="sr-only">Previous</span>
@@ -147,7 +133,7 @@ export default function CategoryLayout({ children }: { children: React.ReactNode
                                             e.stopPropagation();
                                             handlePrev();
                                         }}
-                                        className="block md:hidden text-zinc-400  hover:text-zinc-800 duration-300"
+                                        className="block md:hidden text-zinc-400 hover:text-zinc-800 duration-300"
                                     >
                                         <ArrowLeft size={26} />
                                         <span className="sr-only">Previous</span>
@@ -174,11 +160,8 @@ export default function CategoryLayout({ children }: { children: React.ReactNode
                                     </button>
                                 </>
                             )}
-
                         </div>
-                        <div className='w-[100dvw]'>
-                            {children}
-                        </div>
+                        <div className="w-[100dvw]">{children}</div>
                     </div>
                 </div>
             </div>
