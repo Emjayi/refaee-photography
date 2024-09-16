@@ -13,28 +13,30 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category')
     const page = parseInt(searchParams.get('page') || '1', 10)
     const limit = parseInt(searchParams.get('limit') || '10', 10)
-
-    if (!category) {
-        return NextResponse.json({ error: 'Category is required' }, { status: 400 })
-    }
+    const imageId = searchParams.get('id') // Get the image ID if provided
 
     try {
-        const images = await imagekit.listFiles({
-            path: `/${category}`,
-            sort: 'DESC_CREATED',
-            limit: limit,
-            skip: (page - 1) * limit
-        })
+        if (imageId) {
+            // Fetch a single image by ID
+            const image = await imagekit.getFileDetails(imageId)
+            return NextResponse.json({ image })
+        } else if (category) {
+            // Fetch list of images by category
+            const images = await imagekit.listFiles({
+                path: `/${category}`,
+                sort: 'DESC_CREATED',
+                limit: limit,
+                skip: (page - 1) * limit
+            })
 
-        return NextResponse.json({
-            images,
-            hasMore: images.length === limit
-        })
+            return NextResponse.json({
+                images,
+                hasMore: images.length === limit
+            })
+        } else {
+            return NextResponse.json({ error: 'Category is required' }, { status: 400 })
+        }
     } catch (error) {
         console.error('Error in /api/images:', error)
-        return NextResponse.json(
-            { error: 'Failed to fetch images', details: error instanceof Error ? error.message : 'Unknown error' },
-            { status: 500 }
-        )
     }
 }
