@@ -1,5 +1,6 @@
 'use client'
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import Lenis from 'lenis'
 
 interface ImageData {
     id: string;
@@ -22,6 +23,16 @@ const ImageCacheContext = createContext<ImageCacheContextType | undefined>(undef
 
 export const ImageCacheProvider = ({ children }: { children: React.ReactNode }) => {
     const [cache, setCache] = useState<ImageCache>({});
+
+    useEffect(() => {
+        const lenis = new Lenis()
+        function raf(time: number) {
+            lenis.raf(time)
+            requestAnimationFrame(raf)
+        }
+
+        requestAnimationFrame(raf)
+    }, [])
 
     return (
         <ImageCacheContext.Provider value={{ cache, setCache }}>

@@ -76,7 +76,7 @@ export default function CategoryLayout({ children }: { children: React.ReactNode
     }, [images, hash]);
 
     const handleClose = () => {
-        router.push(`/works/${category}`);
+        router.back();
     };
 
     const handlePrev = () => {
