@@ -38,8 +38,6 @@ export default function Gallery() {
 
     const fetchImages = useCallback(async (category: string, pageNum: number) => {
         if (!hasMore) return
-
-        setLoading(true)
         setError(null)
 
         try {

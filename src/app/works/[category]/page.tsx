@@ -8,5 +8,10 @@ export async function generateStaticParams() {
 }
 
 export default function WorksPage({ params }: { params: { category: string } }) {
-    return <Gallery />
+    return (
+        <>
+            <h1 className='md:hidden w-full text-center text-xl -mt-[8.7vh] mb-[8.7vh]'>{params.category}</h1>
+            <Gallery />
+        </>
+    )
 }

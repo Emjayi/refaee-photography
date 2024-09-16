@@ -23,31 +23,35 @@ export default function Lightbox({ images, currentIndex, onClose }: any) {
         >
             {imageLoading && <Loading />}
             <div
-                className="fixed flex max-h-full p-4"
+                className="fixed inset-0 flex items-center justify-center p-4"
                 onClick={(e) => e.stopPropagation()}
             >
                 <Swiper
                     initialSlide={currentIndex}
                     modules={[Autoplay, Keyboard, Pagination, Navigation]}
-                    className="relative w-screen h-[80dvh]"
+                    className="w-full h-full"
                     onSlideChange={() => setImageLoading(true)}
+                    pagination={{ clickable: true }}
+                    keyboard={{ enabled: true }}
                 >
                     {images.map((image: { src: string; alt: string }, index: number) => (
-                        <Lens key={index} hovering={hovering} setHovering={setHovering}>
-                            <SwiperSlide onLoad={() => setImageLoading(false)}>
-                                <IKImage
-                                    priority
-                                    urlEndpoint={urlEndpoint}
-                                    lqip={{ active: true }}
-                                    loading="lazy"
-                                    path={image.src}
-                                    fill
-                                    quality={100}
-                                    alt={image.alt}
-                                    className="object-contain"
-                                />
-                            </SwiperSlide>
-                        </Lens>
+                        <SwiperSlide key={index} className="flex items-center justify-center">
+                            <Lens hovering={hovering} setHovering={setHovering}>
+                                <div className="relative w-full h-full">
+                                    <IKImage
+                                        priority
+                                        urlEndpoint={urlEndpoint}
+                                        lqip={{ active: true }}
+                                        loading="lazy"
+                                        fill
+                                        path={image.src}
+                                        alt={image.alt}
+                                        className="object-contain w-full h-full"
+                                        onLoad={() => setImageLoading(false)}
+                                    />
+                                </div>
+                            </Lens>
+                        </SwiperSlide>
                     ))}
                     <div className='w-full flex gap-2 justify-center fixed bottom-10 z-10'>
                         <SlidePrevButton />
@@ -66,28 +70,27 @@ export default function Lightbox({ images, currentIndex, onClose }: any) {
     )
 }
 
-// ... (SlideNextButton and SlidePrevButton remain the same)
-
 function SlideNextButton() {
     const swiper = useSwiper();
 
     return (
         <button
             onClick={() => swiper.slideNext()}
-            className='text-zinc-400  hover:text-zinc-800 duration-300'
+            className='swiper-button-next text-zinc-400 hover:text-zinc-800 duration-300'
         >
             <ArrowRight size={16} />
             <span className="sr-only">Next</span>
         </button>
     );
 }
+
 function SlidePrevButton() {
     const swiper = useSwiper();
 
     return (
         <button
             onClick={() => swiper.slidePrev()}
-            className='text-zinc-400 hover:text-zinc-800 duration-300'
+            className='swiper-button-prev text-zinc-400 hover:text-zinc-800 duration-300'
         >
             <ArrowLeft size={16} />
             <span className="sr-only">Previous</span>
