@@ -8,7 +8,7 @@ import { ImageCacheProvider } from '@/contexts/ImageCacheContext';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Refaee',
+  title: 'Alireza Refaei',
   description: 'Photographer',
 }
 
