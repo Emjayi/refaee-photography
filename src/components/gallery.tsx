@@ -78,7 +78,7 @@ export default function Gallery() {
     }, [currentCategory, cache, setCache]);
 
     useEffect(() => {
-        if (!loading && images.length > 0) {
+        if (!loading && images.length > 70) {
             const savedPosition = sessionStorage.getItem(`scroll-position-${currentCategory}`);
             if (savedPosition) {
                 window.scrollTo(0, parseInt(savedPosition, 10));

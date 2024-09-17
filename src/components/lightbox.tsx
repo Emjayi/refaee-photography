@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 
 const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
-export default function Lightbox({ images, currentIndex, onClose, pathname, currentCategory }: any) {
+export default function Lightbox({ images, currentIndex, currentCategory }: any) {
     const [imageLoading, setImageLoading] = useState(true);
     const [hovering, setHovering] = useState(false);
     const router = useRouter();
