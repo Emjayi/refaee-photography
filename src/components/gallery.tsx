@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { IKImage } from 'imagekitio-react';
 import { motion } from 'framer-motion';
 import { navbarLinks } from '@/lib/data';
 import Loading from '@/app/loading';
 import { useImageCache } from '@/contexts/ImageCacheContext';
+import React from 'react';
 
 const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
 
@@ -76,45 +77,16 @@ export default function Gallery() {
         }
     }, [currentCategory, cache, setCache]);
 
-    const fetchImages = useCallback(
-        async (category: string) => {
-            setError(null);
-            setLoading(true);
-
-            try {
-                const response = await fetch(`/api/images?category=${category}&limit=1000`);
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Failed to fetch images');
-                }
-                const data = await response.json();
-
-                const uniqueImages = data.images.map((image: any) => ({
-                    id: image.fileId,
-                    filePath: image.filePath,
-                    name: image.name,
-                    createdAt: image.createdAt,
-                    hash: image.hash,
-                }));
-
-                setImages(uniqueImages);
-            } catch (error: any) {
-                console.error('Error fetching images:', error);
-                setError(error.message || 'An unknown error occurred');
-            } finally {
-                setLoading(false);
-            }
-        },
-        []
-    );
-
     useEffect(() => {
-        if (currentCategory) {
-            setImages([]);
-            setError(null);
-            fetchImages(currentCategory);
+        if (!loading && images.length > 0) {
+            const savedPosition = sessionStorage.getItem(`scroll-position-${currentCategory}`);
+            if (savedPosition) {
+                window.scrollTo(0, parseInt(savedPosition, 10));
+                // Remove the saved position after restoring it
+                sessionStorage.removeItem(`scroll-position-${currentCategory}`);
+            }
         }
-    }, [currentCategory, fetchImages]);
+    }, [currentCategory, loading, images]);
 
     const handleImageLoad = useCallback((index: number) => {
         setLoadedImages((prev) => [...prev, index]);
@@ -123,10 +95,25 @@ export default function Gallery() {
     const openImagePage = useCallback(
         (index: number) => {
             const imageHash = images[index].hash;
+            // Save scroll position
+            sessionStorage.setItem(`scroll-position-${currentCategory}`, window.scrollY.toString());
             router.push(`/works/${currentCategory}/${imageHash}`);
         },
         [images, router, currentCategory]
     );
+
+    const memoizedGalleryImages = useMemo(() => {
+        return images.map((image, index) => (
+            <GalleryImage
+                key={image.id}
+                image={image}
+                index={index}
+                isLoaded={loadedImages.includes(index)}
+                onLoad={() => handleImageLoad(index)}
+                onClick={() => openImagePage(index)}
+            />
+        ));
+    }, [images, loadedImages, handleImageLoad, openImagePage]);
 
     if (error) {
         return (
@@ -143,16 +130,7 @@ export default function Gallery() {
                     }`}
             >
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {images.map((image, index) => (
-                        <GalleryImage
-                            key={image.id}
-                            image={image}
-                            index={index}
-                            isLoaded={loadedImages.includes(index)}
-                            onLoad={() => handleImageLoad(index)}
-                            onClick={() => openImagePage(index)}
-                        />
-                    ))}
+                    {memoizedGalleryImages}
                 </div>
                 {loading && (
                     <div className="flex items-center justify-center h-48">
@@ -163,6 +141,7 @@ export default function Gallery() {
         </div>
     );
 }
+
 interface GalleryImageProps {
     image: ImageData;
     index: number;
@@ -171,7 +150,13 @@ interface GalleryImageProps {
     onClick: () => void;
 }
 
-const GalleryImage = ({ image, index, isLoaded, onLoad, onClick }: GalleryImageProps) => {
+const GalleryImage = React.memo(function GalleryImage({
+    image,
+    index,
+    isLoaded,
+    onLoad,
+    onClick,
+}: GalleryImageProps) {
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -186,10 +171,7 @@ const GalleryImage = ({ image, index, isLoaded, onLoad, onClick }: GalleryImageP
                 if (e.key === 'Enter') onClick();
             }}
         >
-
-            {!isLoaded && (
-                <div className="absolute inset-0 bg-gray-400 animate-pulse" />
-            )}
+            {!isLoaded && <div className="absolute inset-0 bg-gray-400 animate-pulse" />}
 
             <IKImage
                 urlEndpoint={urlEndpoint}
@@ -203,8 +185,7 @@ const GalleryImage = ({ image, index, isLoaded, onLoad, onClick }: GalleryImageP
                     }`}
             />
 
-            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            </div>
+            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" />
         </motion.div>
     );
-};
+});
