@@ -7,6 +7,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, ArrowRight, LayoutGrid } from 'lucide-react';
 import { ImageContext } from '@/contexts/ImageContext';
 
+
 interface ImageData {
     id: string;
     filePath: string;
