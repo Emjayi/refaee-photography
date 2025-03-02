@@ -10,6 +10,7 @@ import 'swiper/css/pagination'
 
 // Define image paths for desktop and mobile
 const desktopImages: string[] = [
+  '/bg/1.jpg',
   '/bg/2.jpg',
   '/bg/3.jpg',
   '/bg/4.jpg',
