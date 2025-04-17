@@ -4,7 +4,7 @@
 
 ## Live Demo
 
-Check out the live portfolio: [alirezareafei.com](https://alirezareafei.com)
+Check out the live portfolio: [alirezarefaei.com](https://alirezarefaei.com)
 
 ## Features
 
